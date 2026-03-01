@@ -1,4 +1,5 @@
-package com.ireddragonicy.konabessnext.ui.compose
+package com.ireddragonicy.konabessnext.ui.compose
+
 
 import com.ireddragonicy.konabessnext.viewmodel.common.UiState
 
@@ -161,7 +162,8 @@ fun GuiEditorContent(
                         onNavigateToUfsTable = { gpuFrequencyViewModel.navigationStep.value = 3 },
                         onNavigateToGmuTable = { gpuFrequencyViewModel.navigationStep.value = 4 },
                         onNavigateToIspTable = { gpuFrequencyViewModel.navigationStep.value = 5 },
-                        onNavigateToGpuBandwidthTable = { gpuFrequencyViewModel.navigationStep.value = 6 }
+                        onNavigateToGpuBandwidthTable = { gpuFrequencyViewModel.navigationStep.value = 6 },
+                        onNavigateToSdeLimits = { gpuFrequencyViewModel.navigationStep.value = 7 }
                     )
                 }
                 1 -> {
@@ -278,6 +280,17 @@ fun GuiEditorContent(
                         bandwidthTables = bandwidthTables,
                         onBack = { gpuFrequencyViewModel.navigationStep.value = 0 },
                         onEditBandwidth = gpuBandwidthViewModel::editBandwidth
+                    )
+                }
+                7 -> {
+                    val sdeViewModel: com.ireddragonicy.konabessnext.viewmodel.display.SdeLimitViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                    val sdeLimits by sdeViewModel.sdeLimits.collectAsState()
+                    com.ireddragonicy.konabessnext.ui.compose.display.SdeLimitScreen(
+                        sdeLimits = sdeLimits,
+                        onBack = { gpuFrequencyViewModel.navigationStep.value = 0 },
+                        onEditMaxBandwidth = sdeViewModel::updateMaxBandwidth,
+                        onEditPerPipeBandwidth = sdeViewModel::updatePerPipeBandwidth,
+                        onEditClockMaxRate = sdeViewModel::updateClockMaxRate
                     )
                 }
             }

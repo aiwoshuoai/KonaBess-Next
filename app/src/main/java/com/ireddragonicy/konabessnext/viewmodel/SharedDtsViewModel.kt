@@ -1,4 +1,5 @@
-package com.ireddragonicy.konabessnext.viewmodel
+package com.ireddragonicy.konabessnext.viewmodel
+
 
 import com.ireddragonicy.konabessnext.viewmodel.common.UiState
 
@@ -95,6 +96,7 @@ class SharedDtsViewModel @Inject constructor(
     val memoryTables = repository.memoryTables
     val gmuTables = repository.gmuTables
     val ispTables = repository.ispTables
+    val sdeLimits = repository.sdeLimits
     private val _detectedActiveBinIndex = MutableStateFlow(-1)
     val detectedActiveBinIndex: StateFlow<Int> = _detectedActiveBinIndex.asStateFlow()
     private val _runtimeGpuFrequencies = MutableStateFlow<List<Long>>(emptyList())

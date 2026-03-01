@@ -736,4 +736,23 @@
     <string name="ufs_storage_overclock_desc">Edit UFS bus frequency tables (freq-table-hz)</string>
     <string name="gmu_overclock">GMU Overclock</string>
     <string name="gmu_overclock_desc">Edit Graphics Management Unit frequencies</string>
+    <!-- Dispaly MDP / SDE Limit Overclocking -->
+    <string name="sde_limits_btn">SDE / DPU Limits</string>
+    <string name="sde_limits_btn_desc">Overclock display engine bandwidth and clock rates</string>
+    <string name="sde_limits_not_found">SDE limits not found</string>
+    <string name="sde_limits_not_found_desc">The expected qcom,mdss_mdp or qcom,sde-kms node was not found in the DTB.</string>
+    <string name="sde_limits_overclock">SDE / DPU Overclock</string>
+    <string name="sde_limits_help_desc">Raising these limits helps stabilize high FPS display overclocks without causing black screens.</string>
+    <string name="sde_max_bandwidth">Max Bandwidth</string>
+    <string name="sde_per_pipe_bandwidth">Per-Pipe Bandwidth</string>
+    <string name="sde_clock_max_rates">Clock Max Rates</string>
+    <string name="total_max_bandwidth">Total Max</string>
+    <string name="pipe_index">Pipe %d</string>
+    <string name="clock_state_index">State %d</string>
+    <string name="edit_max_bandwidth">Edit Max Bandwidth</string>
+    <string name="edit_per_pipe_bandwidth">Edit Per-Pipe Bandwidth (Pipe %d)</string>
+    <string name="edit_clock_rate">Edit Clock Max Rate (State %d)</string>
+    <string name="current_value_hex_dec">Current: %1$d (0x%2$s)</string>
+    <string name="new_value">New Value (Decimal or Hex 0x...)</string>
+
 </resources>

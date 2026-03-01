@@ -26,6 +26,7 @@ open class GpuRepository @Inject constructor(
     private val ufsDomainManager: UfsDomainManager,
     private val gmuDomainManager: com.ireddragonicy.konabessnext.domain.GmuDomainManager,
     private val camIspDomainManager: com.ireddragonicy.konabessnext.domain.CamIspDomainManager,
+    private val sdeDomainManager: com.ireddragonicy.konabessnext.domain.SdeDomainManager,
     private val historyManager: HistoryManager,
     private val chipRepository: ChipRepositoryInterface,
     private val userMessageManager: com.ireddragonicy.konabessnext.utils.UserMessageManager
@@ -151,6 +152,26 @@ open class GpuRepository @Inject constructor(
         }
         .flowOn(Dispatchers.Default)
         .stateIn(repoScope, SharingStarted.Lazily, emptyList())
+
+    @OptIn(FlowPreview::class)
+    val sdeLimits: StateFlow<com.ireddragonicy.konabessnext.model.display.SdeLimitModel?> = merge(
+        _dtsLines.debounce(1000),
+        _structuralChange.map { _dtsLines.value }
+    )
+        .distinctUntilChanged()
+        .map { lines ->
+            val root = try {
+                DtsTreeHelper.parse(lines.joinToString("\n"))
+            } catch (_: Exception) { null }
+            if (root != null) {
+                val sdeNode = sdeDomainManager.findSdeNode(root)
+                if (sdeNode != null) {
+                    sdeDomainManager.extractSdeLimits(sdeNode)
+                } else null
+            } else null
+        }
+        .flowOn(Dispatchers.Default)
+        .stateIn(repoScope, SharingStarted.Lazily, null)
 
     override val canUndo: StateFlow<Boolean> = historyManager.canUndo
     override val canRedo: StateFlow<Boolean> = historyManager.canRedo
@@ -510,6 +531,15 @@ open class GpuRepository @Inject constructor(
         repoScope.launch {
             val root = getTreeCopy() ?: return@launch
             if (!gpuDomainManager.updateGpuBandwidthTable(root, propertyName, newBandwidths)) return@launch
+            commitTreeChanges(historyDesc, root)
+        }
+    }
+
+    fun updateSdeLimits(maxBw: Long?, perPipeBw: List<Long>, clockMaxRates: List<Long>, historyDesc: String) {
+        repoScope.launch {
+            val root = getTreeCopy() ?: return@launch
+            val sdeNode = sdeDomainManager.findSdeNode(root) ?: return@launch
+            if (!sdeDomainManager.updateSdeLimits(sdeNode, maxBw, perPipeBw, clockMaxRates)) return@launch
             commitTreeChanges(historyDesc, root)
         }
     }
