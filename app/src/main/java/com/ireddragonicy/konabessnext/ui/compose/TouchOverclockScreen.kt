@@ -62,7 +62,7 @@ fun TouchOverclockScreen(
         if (touchPanels.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No compatible touch devices found in DTBO.",
+                    text = stringResource(R.string.no_touch_devices_found),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -89,18 +89,18 @@ fun TouchOverclockScreen(
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Node: ${panel.nodeName} (Fragment ${panel.fragmentIndex})",
+                                text = stringResource(R.string.dtbo_node_format_with_fragment, panel.nodeName, panel.fragmentIndex),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Compatible: ${panel.compatible}",
+                                text = stringResource(R.string.compatible_format, panel.compatible),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "SPI Max Frequency: ${panel.spiMaxFrequency} Hz",
+                                text = stringResource(R.string.spi_max_frequency_format, panel.spiMaxFrequency),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -115,12 +115,12 @@ fun TouchOverclockScreen(
         var inputFreq by remember { mutableStateOf(selectedPanel!!.spiMaxFrequency.toString()) }
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
-            title = { Text("Edit SPI Max Frequency") },
+            title = { Text(stringResource(R.string.edit_spi_max_frequency)) },
             text = {
                 OutlinedTextField(
                     value = inputFreq,
                     onValueChange = { inputFreq = it },
-                    label = { Text("Frequency (Hz)") },
+                    label = { Text(stringResource(R.string.frequency_hz_hint)) },
                     singleLine = true
                 )
             },

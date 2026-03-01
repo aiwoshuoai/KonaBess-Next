@@ -640,6 +640,55 @@
     <string name="dtbo_touch_changes">Touchscreen Changes</string>
     <string name="dtbo_speaker_changes">Speaker Amplifier Changes</string>
 
+    <string name="saved_to_format">Saved to %1$s/%2$s</string>
+
+    <!-- UFS Editor screens -->
+    <string name="no_ufs_tables_found">No UFS Tables Found</string>
+    <string name="no_ufs_tables_desc">Ensure your DTS has a valid UFS node.</string>
+    <string name="ufs_disabled_padding">Disabled / Padding (0x0)</string>
+    <string name="ufs_min_max_mhz_format">Min: %1$s MHz | Max: %2$s MHz</string>
+    <string name="edit_target_format">Edit %1$s</string>
+    <string name="current_min_format">Current Min: %1$s MHz (0x%2$s)</string>
+    <string name="min_frequency_mhz">Min Frequency (MHz)</string>
+    <string name="eg_100_or_0">e.g. 100 or 0</string>
+    <string name="current_max_format">Current Max: %1$s MHz (0x%2$s)</string>
+    <string name="max_frequency_mhz">Max Frequency (MHz)</string>
+    <string name="eg_403_or_0">e.g. 403 or 0</string>
+
+    <!-- GMU Overclock screens -->
+    <string name="no_gmu_tables_found">No GMU tables found</string>
+    <string name="no_gmu_tables_desc">There are no GMU tables in the loaded DTS.</string>
+    <string name="frequencies_count_format">%1$d Frequencies</string>
+    <string name="vote_hex_format">Vote: 0x%1$s</string>
+    <string name="add_new_gmu_frequency">Add New GMU Frequency</string>
+    <string name="edit_gmu_frequency">Edit GMU Frequency</string>
+    <string name="current_freq_mhz_format_no_hex">Current: %1$s MHz</string>
+    <string name="vote_hex">Vote (Hex)</string>
+    <string name="eg_500">e.g. 500</string>
+    <string name="eg_40">e.g. 40</string>
+
+    <!-- DTBO Overclock Screens -->
+    <string name="touchscreen_overclock">Touchscreen Overclock</string>
+    <string name="touchscreen_overclock_desc">Edit SPI bus frequency for touch sampling</string>
+    <string name="speaker_amplifier">Speaker Amplifier</string>
+    <string name="speaker_amplifier_desc">Customize speaker amplifier resistance parameters</string>
+    <string name="no_speaker_amps_found">No compatible speaker amplifiers found in DTBO.</string>
+    <string name="dtbo_node_format_with_fragment">Node: %1$s (Fragment %2$d)</string>
+    <string name="compatible_format">Compatible: %1$s</string>
+    <string name="re_min">RE Min.</string>
+    <string name="re_max">RE Max.</string>
+    <string name="edit_speaker_re_bounds">Edit Speaker RE Bounds</string>
+    <string name="edit_speaker_re_bounds_desc">Customize the resistance limits for the smart amplifier.</string>
+    <string name="minimum_aw_re_min">Minimum (aw-re-min)</string>
+    <string name="maximum_aw_re_max">Maximum (aw-re-max)</string>
+    <string name="no_touch_devices_found">No compatible touch devices found in DTBO.</string>
+    <string name="spi_max_frequency_format">SPI Max Frequency: %1$d Hz</string>
+    <string name="edit_spi_max_frequency">Edit SPI Max Frequency</string>
+    <string name="frequency_hz_hint">Frequency (Hz)</string>
+    <string name="hz_format">%1$dHz</string>
+    <string name="resolution_hz_format">%1$dHz • %2$d×%3$d</string>
+    <string name="hex_format">Hex: 0x%1$s</string>
+
     <!-- DDR / LLCC Memory Overclocking -->
     <string name="memory_cache_frequencies">Memory &amp; Cache Frequencies</string>
     <string name="memory_cache_frequencies_desc">Edit DDR, LLCC, and DDR-QoS frequency tables</string>
@@ -658,4 +707,33 @@
     <string name="camera_isp_desc">Edit Image Signal Processor (Spectra) frequencies for camera mods</string>
     <string name="isp_node">ISP Node</string>
     <string name="power_level">Power Level</string>
+    
+    <string name="no_camera_isp_nodes_found">No Camera ISP nodes found</string>
+    <string name="no_camera_isp_nodes_desc">Unable to find supported spectra/ife nodes.</string>
+    <string name="power_levels_format">%1$d Power Levels</string>
+    <string name="freq_hex_dec_format">0x%1$s (%2$d Hz)</string>
+    <string name="level_format_display">Level: %1$s</string>
+    <string name="frequency_mhz">Frequency (MHz)</string>
+    <string name="format_mhz_string">%1$s MHz</string>
+    <string name="freq_khz_hex_dec_format">0x%1$s (%2$d kHz)</string>
+    <string name="current_freq_mhz_format">Current: %1$s MHz (0x%2$s)</string>
+    <string name="enter_new_freq_mhz">Enter the new frequency value in MHz.</string>
+    <string name="eg_3200">e.g. 3200</string>
+
+    <!-- GPU Bandwidth Editor -->
+    <string name="gpu_bus_bandwidth">GPU Bus Bandwidth</string>
+    <string name="gpu_bus_bandwidth_desc">Edit DDR and CNOC bus tables</string>
+    <string name="no_gpu_bandwidth_tables">No GPU bandwidth tables found</string>
+    <string name="no_gpu_bandwidth_tables_desc">No qcom,bus-table-ddr or qcom,bus-table-cnoc found in DTS.</string>
+    <string name="bandwidth_levels_format">%1$d bandwidth levels</string>
+    <string name="index_format">Index %1$d</string>
+    <string name="bandwidth_hex_dec_format">0x%1$s (%2$d decimal)</string>
+    <string name="current_bandwidth_format">Current: %1$d (0x%2$s)</string>
+    <string name="new_bandwidth_value">New bandwidth value</string>
+    
+    <!-- Other missed strings -->
+    <string name="ufs_storage_overclock">UFS Storage Overclock</string>
+    <string name="ufs_storage_overclock_desc">Edit UFS bus frequency tables (freq-table-hz)</string>
+    <string name="gmu_overclock">GMU Overclock</string>
+    <string name="gmu_overclock_desc">Edit Graphics Management Unit frequencies</string>
 </resources>

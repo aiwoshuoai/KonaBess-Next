@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.*
@@ -15,23 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ireddragonicy.konabessnext.R
-import com.ireddragonicy.konabessnext.model.isp.CamIspFreqTable
-import java.util.Locale
+import com.ireddragonicy.konabessnext.model.gpu.GpuBandwidthTable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CamIspEditorScreen(
-    ispTables: List<CamIspFreqTable>,
+fun GpuBandwidthScreen(
+    bandwidthTables: List<GpuBandwidthTable>,
     onBack: () -> Unit,
-    onEditFrequency: (nodeName: String, index: Int, newFreqHz: Long) -> Unit
+    onEditBandwidth: (propertyName: String, index: Int, newValue: Long) -> Unit
 ) {
-    var selectedTable by remember { mutableStateOf<CamIspFreqTable?>(null) }
+    var selectedTable by remember { mutableStateOf<GpuBandwidthTable?>(null) }
 
     val currentTable = selectedTable?.let { sel ->
-        ispTables.firstOrNull { it.nodeName == sel.nodeName }
+        bandwidthTables.firstOrNull { it.propertyName == sel.propertyName }
     }
 
     LaunchedEffect(currentTable) {
@@ -45,6 +42,7 @@ fun CamIspEditorScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+        // Top bar
         Surface(
             tonalElevation = 3.dp,
             shadowElevation = 3.dp
@@ -78,13 +76,13 @@ fun CamIspEditorScreen(
         }
 
         if (currentTable != null) {
-            FrequencyListView(
+            BandwidthListView(
                 table = currentTable,
-                onEditFrequency = onEditFrequency
+                onEditBandwidth = onEditBandwidth
             )
         } else {
             TableSelectionView(
-                ispTables = ispTables,
+                bandwidthTables = bandwidthTables,
                 onSelectTable = { selectedTable = it }
             )
         }
@@ -93,20 +91,20 @@ fun CamIspEditorScreen(
 
 @Composable
 private fun TableSelectionView(
-    ispTables: List<CamIspFreqTable>,
-    onSelectTable: (CamIspFreqTable) -> Unit
+    bandwidthTables: List<GpuBandwidthTable>,
+    onSelectTable: (GpuBandwidthTable) -> Unit
 ) {
-    if (ispTables.isEmpty()) {
+    if (bandwidthTables.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = stringResource(R.string.no_camera_isp_nodes_found),
+                    text = stringResource(R.string.no_gpu_bandwidth_tables),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(R.string.no_camera_isp_nodes_desc),
+                    text = stringResource(R.string.no_gpu_bandwidth_tables_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
@@ -120,8 +118,8 @@ private fun TableSelectionView(
             contentPadding = PaddingValues(top = 4.dp, bottom = 88.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(ispTables.size) { index ->
-                val table = ispTables[index]
+            items(bandwidthTables.size) { index ->
+                val table = bandwidthTables[index]
                 Card(
                     onClick = { onSelectTable(table) },
                     colors = CardDefaults.cardColors(
@@ -133,12 +131,12 @@ private fun TableSelectionView(
                 ) {
                     Column(modifier = Modifier.padding(24.dp)) {
                         Text(
-                            text = table.nodeName,
+                            text = formatBandwidthTableDisplayName(table.propertyName),
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = stringResource(R.string.power_levels_format, table.levels.size),
+                            text = stringResource(R.string.bandwidth_levels_format, table.bandwidths.size),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                         )
@@ -151,9 +149,9 @@ private fun TableSelectionView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun FrequencyListView(
-    table: CamIspFreqTable,
-    onEditFrequency: (nodeName: String, index: Int, newFreqHz: Long) -> Unit
+private fun BandwidthListView(
+    table: GpuBandwidthTable,
+    onEditBandwidth: (propertyName: String, index: Int, newValue: Long) -> Unit
 ) {
     var editingIndex by remember { mutableStateOf(-1) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -168,23 +166,17 @@ private fun FrequencyListView(
         ) {
             item {
                 Text(
-                    text = table.nodeName,
+                    text = formatBandwidthTableDisplayName(table.propertyName),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
                 )
             }
 
-            itemsIndexed(table.levels) { index, levelName ->
-                // Ensure we don't crash if sizes are mismatched somehow, we padded or took maxes.
-                val freqHz = table.freqHzList.getOrNull(index) ?: 0L
-                val freqMhz = formatHzToMhzDisplay(freqHz)
-
+            itemsIndexed(table.bandwidths) { index, bandwidth ->
                 Card(
                     onClick = {
-                        if (freqHz > 0) {
-                            editingIndex = index
-                            showEditDialog = true
-                        }
+                        editingIndex = index
+                        showEditDialog = true
                     },
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -202,75 +194,59 @@ private fun FrequencyListView(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = levelName,
+                                text = stringResource(R.string.index_format, index),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = if (freqHz > 0) "$freqMhz MHz" else "Unused/Zero",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            if (freqHz > 0) {
-                                Text(
-                                    text = stringResource(R.string.freq_hex_dec_format, freqHz.toString(16), freqHz),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                                )
-                            }
-                        }
-                        if (freqHz > 0) {
-                            Icon(
-                                Icons.Rounded.Edit,
-                                contentDescription = stringResource(R.string.edit),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = stringResource(R.string.bandwidth_hex_dec_format, bandwidth.toString(16), bandwidth),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                             )
                         }
+                        Icon(
+                            Icons.Rounded.Edit,
+                            contentDescription = stringResource(R.string.edit),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
             }
         }
     }
 
-    if (showEditDialog && editingIndex >= 0 && editingIndex < table.freqHzList.size) {
-        val currentFreqHz = table.freqHzList[editingIndex]
-        val levelName = table.levels.getOrNull(editingIndex) ?: "Unknown"
-        var inputMhz by remember(editingIndex, currentFreqHz) {
-            mutableStateOf(formatHzToMhzDisplay(currentFreqHz))
+    if (showEditDialog && editingIndex >= 0 && editingIndex < table.bandwidths.size) {
+        val currentBw = table.bandwidths[editingIndex]
+        var inputVal by remember(editingIndex, currentBw) {
+            mutableStateOf(currentBw.toString())
         }
-
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
-            title = { Text(stringResource(R.string.edit_frequency)) },
+            title = { Text(stringResource(R.string.edit)) },
             text = {
                 Column {
                     Text(
-                        text = stringResource(R.string.level_format_display, levelName),
+                        text = stringResource(R.string.current_bandwidth_format, currentBw, currentBw.toString(16)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
-                        value = inputMhz,
-                        onValueChange = { inputMhz = it },
-                        label = { Text(stringResource(R.string.frequency_mhz)) },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        value = inputVal,
+                        onValueChange = { inputVal = it },
+                        label = { Text(stringResource(R.string.new_bandwidth_value)) },
+                        singleLine = true
                     )
                 }
             },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        val newKHz = parseMhzToHz(inputMhz)
-                        if (newKHz != null) {
-                            onEditFrequency(table.nodeName, editingIndex, newKHz)
-                        }
-                        showEditDialog = false
-                    },
-                    enabled = parseMhzToHz(inputMhz) != null
-                ) {
+                TextButton(onClick = {
+                    parseBandwidthInput(inputVal)?.let { newBw ->
+                        onEditBandwidth(table.propertyName, editingIndex, newBw)
+                    }
+                    showEditDialog = false
+                }) {
                     Text(stringResource(R.string.save))
                 }
             },
@@ -283,22 +259,25 @@ private fun FrequencyListView(
     }
 }
 
-private fun formatHzToMhzDisplay(hz: Long): String {
-    val mhz = hz / 1_000_000.0
-    return if (mhz == mhz.toLong().toDouble()) {
-        mhz.toLong().toString()
-    } else {
-        String.format(Locale.US, "%.2f", mhz)
-    }
-}
-
-private fun parseMhzToHz(input: String): Long? {
+private fun parseBandwidthInput(input: String): Long? {
     val trimmed = input.trim()
     if (trimmed.isEmpty()) return null
-    return try {
-        val mhz = trimmed.toDouble()
-        (mhz * 1_000_000).toLong()
-    } catch (_: NumberFormatException) {
-        null
+
+    if (trimmed.startsWith("0x", ignoreCase = true)) {
+        return try {
+            java.lang.Long.decode(trimmed)
+        } catch (_: NumberFormatException) {
+            null
+        }
+    }
+
+    return trimmed.toLongOrNull()
+}
+
+private fun formatBandwidthTableDisplayName(propertyName: String): String {
+    return when (propertyName) {
+        "qcom,bus-table-ddr" -> "DDR Bus Table"
+        "qcom,bus-table-cnoc" -> "CNOC Bus Table"
+        else -> propertyName
     }
 }

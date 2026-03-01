@@ -86,11 +86,11 @@ fun DtboDashboard(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Touchscreen Overclock",
+                            text = stringResource(R.string.touchscreen_overclock),
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Edit SPI bus frequency for touch sampling",
+                            text = stringResource(R.string.touchscreen_overclock_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                         )
@@ -124,11 +124,11 @@ fun DtboDashboard(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Speaker Amplifier",
+                            text = stringResource(R.string.speaker_amplifier),
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Customize speaker amplifier resistance parameters",
+                            text = stringResource(R.string.speaker_amplifier_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.7f)
                         )

@@ -263,7 +263,7 @@ class SharedDtsViewModel @Inject constructor(
                 userMessageManager.emitError("Save Failed", result.error.message)
             } else if (showToast) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(application, "Saved successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(application, application.getString(R.string.saved_successfully), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -308,7 +308,7 @@ class SharedDtsViewModel @Inject constructor(
                     output.write(content.toByteArray())
                 }
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "Saved to ${settingsRepository.getExportPathDisplay()}/$name", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.saved_to_format, settingsRepository.getExportPathDisplay(), name), Toast.LENGTH_SHORT).show()
                 }
                 true
             }

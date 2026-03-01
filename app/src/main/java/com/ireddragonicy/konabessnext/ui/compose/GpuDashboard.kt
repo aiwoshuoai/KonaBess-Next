@@ -33,7 +33,8 @@ fun GpuDashboard(
     onNavigateToMemoryTable: () -> Unit = {},
     onNavigateToUfsTable: () -> Unit = {},
     onNavigateToGmuTable: () -> Unit = {},
-    onNavigateToIspTable: () -> Unit = {}
+    onNavigateToIspTable: () -> Unit = {},
+    onNavigateToGpuBandwidthTable: () -> Unit = {}
 ) {
     val gpuModelName by sharedViewModel.gpuModelName.collectAsState()
     val currentChip by sharedViewModel.currentChip.collectAsState()
@@ -185,6 +186,43 @@ fun GpuDashboard(
             }
         }
 
+        item {
+            Card(
+                onClick = onNavigateToGpuBandwidthTable,
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.gpu_bus_bandwidth),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Text(
+                            text = stringResource(R.string.gpu_bus_bandwidth_desc),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                        )
+                    }
+                    Icon(
+                        imageVector = Icons.Rounded.Storage,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            }
+        }
+
         if (memoryTables.isNotEmpty()) {
             item {
                 Card(
@@ -243,11 +281,11 @@ fun GpuDashboard(
                 ) {
                     Column {
                         Text(
-                            text = "UFS Storage Overclock",
+                            text = stringResource(R.string.ufs_storage_overclock),
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "Edit UFS bus frequency tables (freq-table-hz)",
+                            text = stringResource(R.string.ufs_storage_overclock_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                         )
@@ -280,13 +318,13 @@ fun GpuDashboard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column {
-                            Text(
-                                text = "GMU Overclock",
-                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                            )
-                            Text(
-                                text = "Edit Graphics Management Unit frequencies",
-                                style = MaterialTheme.typography.bodyMedium,
+                        Text(
+                            text = stringResource(R.string.gmu_overclock),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Text(
+                            text = stringResource(R.string.gmu_overclock_desc),
+                            style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                             )
                         }

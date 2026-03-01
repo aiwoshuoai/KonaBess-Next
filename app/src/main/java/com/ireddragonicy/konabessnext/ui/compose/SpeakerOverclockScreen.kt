@@ -62,7 +62,7 @@ fun SpeakerOverclockScreen(
         if (speakerPanels.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No compatible speaker amplifiers found in DTBO.",
+                    text = stringResource(R.string.no_speaker_amps_found),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -89,12 +89,12 @@ fun SpeakerOverclockScreen(
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Node: ${panel.nodeName} (Fragment ${panel.fragmentIndex})",
+                                text = stringResource(R.string.dtbo_node_format_with_fragment, panel.nodeName, panel.fragmentIndex),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Compatible: ${panel.compatible}",
+                                text = stringResource(R.string.compatible_format, panel.compatible),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                             )
@@ -105,24 +105,24 @@ fun SpeakerOverclockScreen(
                             ) {
                                 Column {
                                     Text(
-                                        text = "RE Min.",
+                                        text = stringResource(R.string.re_min),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = "${panel.awReMin}",
+                                        text = panel.awReMin.toString(),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                                 Column(horizontalAlignment = Alignment.End) {
                                     Text(
-                                        text = "RE Max.",
+                                        text = stringResource(R.string.re_max),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = "${panel.awReMax}",
+                                        text = panel.awReMax.toString(),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -140,25 +140,25 @@ fun SpeakerOverclockScreen(
         var inputReMax by remember { mutableStateOf(selectedPanel!!.awReMax.toString()) }
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
-            title = { Text("Edit Speaker RE Bounds") },
+            title = { Text(stringResource(R.string.edit_speaker_re_bounds)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "Customize the resistance limits for the smart amplifier.",
+                        text = stringResource(R.string.edit_speaker_re_bounds_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     OutlinedTextField(
                         value = inputReMin,
                         onValueChange = { inputReMin = it },
-                        label = { Text("Minimum (aw-re-min)") },
+                        label = { Text(stringResource(R.string.minimum_aw_re_min)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = inputReMax,
                         onValueChange = { inputReMax = it },
-                        label = { Text("Maximum (aw-re-max)") },
+                        label = { Text(stringResource(R.string.maximum_aw_re_max)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )

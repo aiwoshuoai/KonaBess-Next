@@ -136,6 +136,22 @@ open class GpuRepository @Inject constructor(
         .flowOn(Dispatchers.Default)
         .stateIn(repoScope, SharingStarted.Lazily, emptyList())
 
+    @OptIn(FlowPreview::class)
+    val gpuBandwidthTables: StateFlow<List<com.ireddragonicy.konabessnext.model.gpu.GpuBandwidthTable>> = merge(
+        _dtsLines.debounce(1000),
+        _structuralChange.map { _dtsLines.value }
+    )
+        .distinctUntilChanged()
+        .map { lines ->
+            DtsEditorDebug.logFlowTriggered("gpuBandwidthTables", lines.size)
+            val root = try {
+                DtsTreeHelper.parse(lines.joinToString("\n"))
+            } catch (_: Exception) { null }
+            if (root != null) gpuDomainManager.findGpuBandwidthTables(root) else emptyList()
+        }
+        .flowOn(Dispatchers.Default)
+        .stateIn(repoScope, SharingStarted.Lazily, emptyList())
+
     override val canUndo: StateFlow<Boolean> = historyManager.canUndo
     override val canRedo: StateFlow<Boolean> = historyManager.canRedo
     override val history: StateFlow<List<String>> = historyManager.history
@@ -486,6 +502,14 @@ open class GpuRepository @Inject constructor(
             val root = getTreeCopy() ?: return@launch
             val tableNode = camIspDomainManager.findIspTableNode(root, nodeName) ?: return@launch
             if (!camIspDomainManager.updateIspClockRates(tableNode, newFrequencies)) return@launch
+            commitTreeChanges(historyDesc, root)
+        }
+    }
+
+    fun updateGpuBandwidthTable(propertyName: String, newBandwidths: List<Long>, historyDesc: String) {
+        repoScope.launch {
+            val root = getTreeCopy() ?: return@launch
+            if (!gpuDomainManager.updateGpuBandwidthTable(root, propertyName, newBandwidths)) return@launch
             commitTreeChanges(historyDesc, root)
         }
     }

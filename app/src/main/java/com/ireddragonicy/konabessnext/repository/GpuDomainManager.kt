@@ -4,6 +4,7 @@ import com.ireddragonicy.konabessnext.model.Bin
 import com.ireddragonicy.konabessnext.model.Level
 import com.ireddragonicy.konabessnext.model.Opp
 import com.ireddragonicy.konabessnext.model.dts.DtsNode
+import com.ireddragonicy.konabessnext.model.gpu.GpuBandwidthTable
 import com.ireddragonicy.konabessnext.utils.DtsHelper
 import com.ireddragonicy.konabessnext.utils.DtsTreeHelper
 import javax.inject.Inject
@@ -373,5 +374,70 @@ class GpuDomainManager @Inject constructor(
         }
         
         return lines
+    }
+
+    /**
+     * Parses a DTS hex array string like `<0x858b8 0x14a780 ...>` into a list of Longs.
+     */
+    private fun parseHexArrayToLongs(rawValue: String): List<Long> {
+        val trimmed = rawValue.trim()
+        if (!trimmed.startsWith("<") || !trimmed.endsWith(">")) return emptyList()
+
+        val inner = trimmed.substring(1, trimmed.length - 1).trim()
+        if (inner.isEmpty()) return emptyList()
+
+        val tokens = inner.split(Regex("\\s+"))
+        return tokens.mapNotNull { token ->
+            try {
+                if (token.startsWith("0x", ignoreCase = true)) {
+                    java.lang.Long.parseUnsignedLong(token.substring(2), 16)
+                } else {
+                    token.toLongOrNull()
+                }
+            } catch (_: NumberFormatException) {
+                null
+            }
+        }
+    }
+
+    /**
+     * Builds a DTS hex array string from a list of Longs.
+     * Example output: `<0x858b8 0x14a780>`
+     */
+    private fun buildHexArrayString(bandwidths: List<Long>): String {
+        val sb = StringBuilder("<")
+        bandwidths.forEachIndexed { index, bw ->
+            if (index > 0) sb.append(' ')
+            sb.append("0x").append(bw.toString(16))
+        }
+        sb.append('>')
+        return sb.toString()
+    }
+
+    fun findGpuBandwidthTables(root: DtsNode): List<GpuBandwidthTable> {
+        val kgslNode = findNodeByNameOrCompatible(root, "qcom,kgsl-3d0") ?: return emptyList()
+        val tables = mutableListOf<GpuBandwidthTable>()
+        
+        listOf("qcom,bus-table-ddr", "qcom,bus-table-cnoc").forEach { propName ->
+            val prop = kgslNode.getProperty(propName)
+            if (prop != null) {
+                val bandwidths = parseHexArrayToLongs(prop.originalValue)
+                // Return even if empty, but usually it shouldn't be empty
+                if (bandwidths.isNotEmpty()) {
+                    tables.add(GpuBandwidthTable(propName, bandwidths))
+                }
+            }
+        }
+        return tables
+    }
+
+    fun updateGpuBandwidthTable(root: DtsNode, propertyName: String, newBandwidths: List<Long>): Boolean {
+        val kgslNode = findNodeByNameOrCompatible(root, "qcom,kgsl-3d0") ?: return false
+        val prop = kgslNode.getProperty(propertyName) ?: return false
+        
+        val hexString = buildHexArrayString(newBandwidths)
+        prop.originalValue = hexString
+        prop.isHexArray = true
+        return true
     }
 }

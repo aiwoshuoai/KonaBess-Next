@@ -271,7 +271,7 @@ class DeviceViewModel @Inject constructor(
 
                         if (writeResult.isSuccess) {
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(context, "Saved to ${settingsRepository.getExportPathDisplay()}/$name", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.saved_to_format, settingsRepository.getExportPathDisplay(), name), Toast.LENGTH_SHORT).show()
                             }
                             true
                         } else {

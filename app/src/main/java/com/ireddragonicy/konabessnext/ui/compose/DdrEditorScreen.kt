@@ -163,7 +163,7 @@ private fun TableSelectionView(
                         val minMhz = formatKhzToMhz(table.frequenciesKHz.minOrNull() ?: 0L)
                         val maxMhz = formatKhzToMhz(table.frequenciesKHz.maxOrNull() ?: 0L)
                         Text(
-                            text = "$minMhz – $maxMhz MHz",
+                            text = stringResource(R.string.frequency_range_mhz_format, minMhz, maxMhz),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
                         )
@@ -226,13 +226,13 @@ private fun FrequencyListView(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "${formatKhzToMhz(freqKHz)} MHz",
+                                text = stringResource(R.string.format_mhz_string, formatKhzToMhz(freqKHz)),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "0x${freqKHz.toString(16)} ($freqKHz kHz)",
+                                text = stringResource(R.string.freq_khz_hex_dec_format, freqKHz.toString(16), freqKHz),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                             )
@@ -278,7 +278,7 @@ private fun FrequencyListView(
             text = {
                 Column {
                     Text(
-                        text = "Current: ${formatKhzToMhz(currentKHz)} MHz (0x${currentKHz.toString(16)})",
+                        text = stringResource(R.string.current_freq_mhz_format, formatKhzToMhz(currentKHz), currentKHz.toString(16)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -346,7 +346,7 @@ private fun FrequencyListView(
             text = {
                 Column {
                     Text(
-                        text = "Enter the new frequency value in MHz.",
+                        text = stringResource(R.string.enter_new_freq_mhz),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -356,7 +356,7 @@ private fun FrequencyListView(
                         onValueChange = { addInputMhz = it },
                         label = { Text(stringResource(R.string.frequency_mhz_hint)) },
                         singleLine = true,
-                        placeholder = { Text("e.g. 3200") }
+                        placeholder = { Text(stringResource(R.string.eg_3200)) }
                     )
                 }
             },

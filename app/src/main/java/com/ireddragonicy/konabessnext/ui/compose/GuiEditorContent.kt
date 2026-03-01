@@ -152,7 +152,8 @@ fun GuiEditorContent(
                         onNavigateToMemoryTable = { gpuFrequencyViewModel.navigationStep.value = 2 },
                         onNavigateToUfsTable = { gpuFrequencyViewModel.navigationStep.value = 3 },
                         onNavigateToGmuTable = { gpuFrequencyViewModel.navigationStep.value = 4 },
-                        onNavigateToIspTable = { gpuFrequencyViewModel.navigationStep.value = 5 }
+                        onNavigateToIspTable = { gpuFrequencyViewModel.navigationStep.value = 5 },
+                        onNavigateToGpuBandwidthTable = { gpuFrequencyViewModel.navigationStep.value = 6 }
                     )
                 }
                 1 -> {
@@ -260,6 +261,15 @@ fun GuiEditorContent(
                         ispTables = ispTables,
                         onBack = { gpuFrequencyViewModel.navigationStep.value = 0 },
                         onEditFrequency = ispViewModel::editFrequency
+                    )
+                }
+                6 -> {
+                    val gpuBandwidthViewModel: com.ireddragonicy.konabessnext.viewmodel.GpuBandwidthViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+                    val bandwidthTables by gpuBandwidthViewModel.bandwidthTables.collectAsState()
+                    com.ireddragonicy.konabessnext.ui.compose.GpuBandwidthScreen(
+                        bandwidthTables = bandwidthTables,
+                        onBack = { gpuFrequencyViewModel.navigationStep.value = 0 },
+                        onEditBandwidth = gpuBandwidthViewModel::editBandwidth
                     )
                 }
             }

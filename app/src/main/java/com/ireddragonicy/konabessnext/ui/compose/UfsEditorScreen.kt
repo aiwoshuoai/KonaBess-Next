@@ -109,13 +109,13 @@ private fun TableSelectionView(
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "No UFS Tables Found",
+                    text = stringResource(R.string.no_ufs_tables_found),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Ensure your DTS has a valid UFS node.",
+                    text = stringResource(R.string.no_ufs_tables_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
@@ -214,7 +214,7 @@ private fun FrequencyListView(
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "Disabled / Padding (0x0)",
+                                    text = stringResource(R.string.ufs_disabled_padding),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                                 )
@@ -226,7 +226,7 @@ private fun FrequencyListView(
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
-                                    text = "Min: ${formatHzToMhz(target.minFreqHz)} MHz | Max: ${formatHzToMhz(target.maxFreqHz)} MHz",
+                                    text = stringResource(R.string.ufs_min_max_mhz_format, formatHzToMhz(target.minFreqHz), formatHzToMhz(target.maxFreqHz)),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                                 )
@@ -249,11 +249,11 @@ private fun FrequencyListView(
             }
             AlertDialog(
                 onDismissRequest = { showEditDialog = false },
-                title = { Text("Edit ${target.name}") },
+                title = { Text(stringResource(R.string.edit_target_format, target.name)) },
                 text = {
                     Column {
                         Text(
-                            text = "Current Min: ${if (target.minFreqHz == 0L) "0" else formatHzToMhz(target.minFreqHz)} MHz (0x${target.minFreqHz.toString(16)})",
+                            text = stringResource(R.string.current_min_format, if (target.minFreqHz == 0L) "0" else formatHzToMhz(target.minFreqHz), target.minFreqHz.toString(16)),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -263,13 +263,13 @@ private fun FrequencyListView(
                             onValueChange = { 
                                 if (it.isEmpty() || it.all { char -> char.isDigit() }) inputMinMhz = it 
                             },
-                            label = { Text("Min Frequency (MHz)") },
+                            label = { Text(stringResource(R.string.min_frequency_mhz)) },
                             singleLine = true,
-                            placeholder = { Text("e.g. 100 or 0") }
+                            placeholder = { Text(stringResource(R.string.eg_100_or_0)) }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Current Max: ${if (target.maxFreqHz == 0L) "0" else formatHzToMhz(target.maxFreqHz)} MHz (0x${target.maxFreqHz.toString(16)})",
+                            text = stringResource(R.string.current_max_format, if (target.maxFreqHz == 0L) "0" else formatHzToMhz(target.maxFreqHz), target.maxFreqHz.toString(16)),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -279,9 +279,9 @@ private fun FrequencyListView(
                             onValueChange = { 
                                 if (it.isEmpty() || it.all { char -> char.isDigit() }) inputMaxMhz = it 
                             },
-                            label = { Text("Max Frequency (MHz)") },
+                            label = { Text(stringResource(R.string.max_frequency_mhz)) },
                             singleLine = true,
-                            placeholder = { Text("e.g. 403 or 0") }
+                            placeholder = { Text(stringResource(R.string.eg_403_or_0)) }
                         )
                     }
                 },

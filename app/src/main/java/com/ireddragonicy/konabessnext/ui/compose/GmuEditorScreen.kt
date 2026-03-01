@@ -105,13 +105,13 @@ private fun TableSelectionView(
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "No GMU tables found",
+                    text = stringResource(R.string.no_gmu_tables_found),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "There are no GMU tables in the loaded DTS.",
+                    text = stringResource(R.string.no_gmu_tables_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
@@ -143,7 +143,7 @@ private fun TableSelectionView(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "${table.pairs.size} Frequencies",
+                            text = stringResource(R.string.frequencies_count_format, table.pairs.size),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
                         )
@@ -206,18 +206,18 @@ private fun PairListView(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "${formatHzToMhzDisplay(pair.freqHz)} MHz",
+                                text = stringResource(R.string.format_mhz_string, formatHzToMhzDisplay(pair.freqHz)),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = "Vote: 0x${pair.vote.toString(16)}",
+                                text = stringResource(R.string.vote_hex_format, pair.vote.toString(16)),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.secondary
                             )
                             Text(
-                                text = "0x${pair.freqHz.toString(16)} (${pair.freqHz} Hz)",
+                                text = stringResource(R.string.freq_hex_dec_format, pair.freqHz.toString(16), pair.freqHz),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                             )
@@ -247,7 +247,7 @@ private fun PairListView(
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 16.dp)
         ) {
-            Icon(Icons.Rounded.Add, contentDescription = "Add New GMU Frequency")
+            Icon(Icons.Rounded.Add, contentDescription = stringResource(R.string.add_new_gmu_frequency))
         }
     }
 
@@ -262,11 +262,11 @@ private fun PairListView(
 
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
-            title = { Text("Edit GMU Frequency") },
+            title = { Text(stringResource(R.string.edit_gmu_frequency)) },
             text = {
                 Column {
                     Text(
-                        text = "Current: ${formatHzToMhzDisplay(currentPair.freqHz)} MHz",
+                        text = stringResource(R.string.current_freq_mhz_format_no_hex, formatHzToMhzDisplay(currentPair.freqHz)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -274,7 +274,7 @@ private fun PairListView(
                     OutlinedTextField(
                         value = inputMhz,
                         onValueChange = { inputMhz = it },
-                        label = { Text("Frequency (MHz)") },
+                        label = { Text(stringResource(R.string.frequency_mhz)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
@@ -282,7 +282,7 @@ private fun PairListView(
                     OutlinedTextField(
                         value = inputVote,
                         onValueChange = { inputVote = it },
-                        label = { Text("Vote (Hex)") },
+                        label = { Text(stringResource(R.string.vote_hex)) },
                         singleLine = true
                     )
                 }
@@ -343,24 +343,24 @@ private fun PairListView(
 
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = { Text("Add New GMU Frequency") },
+            title = { Text(stringResource(R.string.add_new_gmu_frequency)) },
             text = {
                 Column {
                     OutlinedTextField(
                         value = addInputMhz,
                         onValueChange = { addInputMhz = it },
-                        label = { Text("Frequency (MHz)") },
+                        label = { Text(stringResource(R.string.frequency_mhz)) },
                         singleLine = true,
-                        placeholder = { Text("e.g. 500") },
+                        placeholder = { Text(stringResource(R.string.eg_500)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = addInputVote,
                         onValueChange = { addInputVote = it },
-                        label = { Text("Vote (Hex)") },
+                        label = { Text(stringResource(R.string.vote_hex)) },
                         singleLine = true,
-                        placeholder = { Text("e.g. 40") }
+                        placeholder = { Text(stringResource(R.string.eg_40)) }
                     )
                 }
             },

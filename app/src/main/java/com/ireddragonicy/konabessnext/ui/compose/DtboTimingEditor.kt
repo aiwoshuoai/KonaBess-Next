@@ -214,7 +214,7 @@ fun DtboTimingEditor(
                         fpsPresets.forEach { fps ->
                             ElevatedAssistChip(
                                 onClick = { displayViewModel.updatePanelFramerate(fps) },
-                                label = { Text("${fps}Hz") }
+                                label = { Text(stringResource(R.string.hz_format, fps)) }
                             )
                         }
                     }
@@ -375,7 +375,7 @@ private fun DfpsListCard(
                                 // Remove this FPS from the list
                                 onUpdateList(dfpsList.filter { it != fps })
                             },
-                            label = { Text("${fps}Hz") },
+                            label = { Text(stringResource(R.string.hz_format, fps)) },
                             trailingIcon = {
                                 Icon(
                                     Icons.Rounded.Close,
@@ -481,8 +481,7 @@ private fun PanelSelectorCard(
                                     )
                                     Text(
                                         text = stringResource(R.string.dtbo_fragment_label, panel.fragmentIndex) +
-                                                " • ${panel.timings.firstOrNull()?.panelFramerate ?: 0}Hz" +
-                                                " • ${panel.timings.firstOrNull()?.panelWidth ?: 0}×${panel.timings.firstOrNull()?.panelHeight ?: 0}",
+                                                " • " + stringResource(R.string.resolution_hz_format, panel.timings.firstOrNull()?.panelFramerate ?: 0, panel.timings.firstOrNull()?.panelWidth ?: 0, panel.timings.firstOrNull()?.panelHeight ?: 0),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                                     )
@@ -539,7 +538,7 @@ private fun TimingSelectorCard(
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "${selected?.panelFramerate ?: 0}Hz • ${selected?.panelWidth ?: 0}×${selected?.panelHeight ?: 0}",
+                            text = stringResource(R.string.resolution_hz_format, selected?.panelFramerate ?: 0, selected?.panelWidth ?: 0, selected?.panelHeight ?: 0),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
@@ -561,7 +560,7 @@ private fun TimingSelectorCard(
                                         fontWeight = if (index == safeIndex) FontWeight.Bold else FontWeight.Normal
                                     )
                                     Text(
-                                        text = "${timing.panelFramerate}Hz • ${timing.panelWidth}×${timing.panelHeight}",
+                                        text = stringResource(R.string.resolution_hz_format, timing.panelFramerate, timing.panelWidth, timing.panelHeight),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                                     )
@@ -727,7 +726,7 @@ private fun BrightnessPropertyRow(
         val longVal = decimalText.toLongOrNull()
         if (longVal != null) {
             Text(
-                text = "Hex: 0x${longVal.toString(16)}",
+                text = stringResource(R.string.hex_format, longVal.toString(16)),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                 modifier = Modifier.padding(start = 4.dp)
