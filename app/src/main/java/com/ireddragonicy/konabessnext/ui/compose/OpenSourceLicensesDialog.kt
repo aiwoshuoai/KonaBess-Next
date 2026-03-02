@@ -29,6 +29,7 @@ val OpenSourceLicenses = listOf(
     LicenseItem("LibSU", "Apache License 2.0, John Wu", "https://github.com/topjohnwu/libsu"),
     LicenseItem("MPAndroidChart", "Apache License 2.0, Philipp Jahoda", "https://github.com/PhilJay/MPAndroidChart"),
     LicenseItem("OkHttp", "Apache License 2.0, Square, Inc.", "https://square.github.io/okhttp/"),
+    LicenseItem("Original KonaBess", "GPL-3.0 license, libxzr", "https://github.com/libxzr/KonaBess"),
     LicenseItem("Sora Editor", "LGPL-3.0 license, Rosemoe", "https://github.com/Rosemoe/sora-editor")
 )
 

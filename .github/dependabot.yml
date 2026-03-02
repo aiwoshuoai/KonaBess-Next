@@ -8,7 +8,7 @@ updates:
       time: "06:00"
       timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
-    target-branch: "master"
+    target-branch: "main"
     groups:
       dependencies:
         patterns:
@@ -22,4 +22,4 @@ updates:
       time: "06:00"
       timezone: "Asia/Jakarta"
     open-pull-requests-limit: 10
-    target-branch: "master"
+    target-branch: "main"
