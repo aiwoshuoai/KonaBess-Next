@@ -60,6 +60,7 @@ jobs:
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Decode Keystore
+      if: github.event_name == 'push'
       run: |
         if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
           echo "${{ secrets.SIGNING_KEY }}" | base64 -d > ${{ github.workspace }}/keystore.jks
@@ -69,6 +70,7 @@ jobs:
         fi
 
     - name: Build Release APK
+      if: github.event_name == 'push'
       run: |
         if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
           echo "Building with release keystore..."
@@ -130,7 +132,9 @@ jobs:
         }
         
         process_apks "app/build/outputs/apk/debug" "debug"
-        process_apks "app/build/outputs/apk/release" "release"
+        if [ "${{ github.event_name }}" == "push" ]; then
+          process_apks "app/build/outputs/apk/release" "release"
+        fi
 
     - name: VirusTotal Scan
       id: virustotal
@@ -250,6 +254,7 @@ jobs:
           app/build/outputs/apk/debug/*.apk
           app/build/outputs/apk/release/*.apk
         retention-days: 90
+        if-no-files-found: ignore
 
     - name: Cleanup Keystore
       if: always()
