@@ -75,8 +75,9 @@ class DeviceViewModel @Inject constructor(
         get() = settingsRepository.isRootMode()
 
     // Flash is only allowed in root mode with a physical DTB (ID >= 0).
-    val canFlashOrRepack: StateFlow<Boolean> = _activeDtbId.map { id ->
-        id >= 0 && settingsRepository.isRootMode()
+    // FIXED: Use _selectedChipset instead of _activeDtbId so it works for manually selected/scanned DTBs
+    val canFlashOrRepack: StateFlow<Boolean> = _selectedChipset.map { dtb ->
+        (dtb != null && dtb.id >= 0) && settingsRepository.isRootMode()
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     companion object {

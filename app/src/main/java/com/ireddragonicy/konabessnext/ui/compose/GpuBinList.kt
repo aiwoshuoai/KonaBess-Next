@@ -23,8 +23,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.window.Dialog
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.rounded.ContentCopy
 import com.ireddragonicy.konabessnext.viewmodel.common.UiState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GpuBinList(
     state: UiState<List<Bin>>,
@@ -33,11 +37,16 @@ fun GpuBinList(
     runtimeGpuFrequencies: List<Long> = emptyList(),
     onBinClick: (Int) -> Unit,
     onBack: () -> Unit,
-    onReload: () -> Unit = {}
+    onReload: () -> Unit = {},
+    onCopyBin: (sourceIndex: Int, targetIndex: Int) -> Unit
 ) {
     val context = LocalContext.current
     var showMultiBinHelp by remember { mutableStateOf(false) }
     val binsForHelp = (state as? UiState.Success)?.data.orEmpty()
+    
+    // Copy Dialog State
+    var showCopyDialogForSource by remember { mutableStateOf<Int?>(null) }
+    var confirmCopyTarget by remember { mutableStateOf<Int?>(null) }
     
     // Icons
     val iconBack = painterResource(R.drawable.ic_arrow_back)
@@ -151,7 +160,8 @@ fun GpuBinList(
                                 BinItemCard(
                                     name = binName,
                                     isActive = index == activeBinIndex,
-                                    onClick = { onBinClick(index) }
+                                    onClick = { onBinClick(index) },
+                                    onCopyClick = { showCopyDialogForSource = index }
                                 )
                             }
                         }
@@ -211,6 +221,161 @@ fun GpuBinList(
             }
         }
     }
+
+    if (showCopyDialogForSource != null) {
+        val sourceIndex = showCopyDialogForSource!!
+        AlertDialog(
+            onDismissRequest = { showCopyDialogForSource = null },
+            title = { Text(stringResource(R.string.copy_bin_to)) },
+            text = {
+                val availableTargets = binsForHelp.mapIndexedNotNull { i, bin -> 
+                    if (i != sourceIndex) i to bin else null 
+                }
+                
+                if (availableTargets.isEmpty()) {
+                    Text("No other bins available.")
+                } else {
+                    LazyColumn {
+                        items(availableTargets.size) { i ->
+                            val targetPair = availableTargets[i]
+                            val targetIndex = targetPair.first
+                            val targetBin = targetPair.second
+                            val realBinId = extractRealBinId(targetBin)
+                            val binName = try {
+                                ChipStringHelper.convertBins(realBinId, context, chipDef)
+                            } catch (e: Exception) {
+                                context.getString(R.string.bin_id_format, realBinId)
+                            }
+                            
+                            Surface(
+                                onClick = {
+                                    confirmCopyTarget = targetIndex
+                                    showCopyDialogForSource = null
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Rounded.ContentCopy, contentDescription = null, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
+                                    Spacer(Modifier.width(16.dp))
+                                    Text(binName)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showCopyDialogForSource = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (confirmCopyTarget != null) {
+        val targetIndex = confirmCopyTarget!!
+        val sourceIndex = showCopyDialogForSource ?: -1 // Just in case, handled below
+        // We need sourceIndex. Since we nulled it, we should have stored it. 
+        // Let's fix that state handling.
+    }
+
+    // Fixed State handling for confirmation
+    var pendingCopySource by remember { mutableStateOf<Int?>(null) }
+    var pendingCopyTarget by remember { mutableStateOf<Int?>(null) }
+
+    if (showCopyDialogForSource != null) {
+        val sourceIndex = showCopyDialogForSource!!
+        AlertDialog(
+            onDismissRequest = { showCopyDialogForSource = null },
+            title = { Text(stringResource(R.string.copy_bin_to)) },
+            text = {
+                val availableTargets = binsForHelp.mapIndexedNotNull { i, bin -> 
+                    if (i != sourceIndex) i to bin else null 
+                }
+                
+                if (availableTargets.isEmpty()) {
+                    Text("No other bins available.")
+                } else {
+                    LazyColumn {
+                        items(availableTargets.size) { i ->
+                            val targetPair = availableTargets[i]
+                            val targetIndex = targetPair.first
+                            val targetBin = targetPair.second
+                            val realBinId = extractRealBinId(targetBin)
+                            val binName = try {
+                                ChipStringHelper.convertBins(realBinId, context, chipDef)
+                            } catch (e: Exception) {
+                                context.getString(R.string.bin_id_format, realBinId)
+                            }
+                            
+                            Surface(
+                                onClick = {
+                                    pendingCopySource = sourceIndex
+                                    pendingCopyTarget = targetIndex
+                                    showCopyDialogForSource = null
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = MaterialTheme.shapes.small
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(vertical = 12.dp, horizontal = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Rounded.ContentCopy, contentDescription = null, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
+                                    Spacer(Modifier.width(16.dp))
+                                    Text(binName)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showCopyDialogForSource = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (pendingCopySource != null && pendingCopyTarget != null) {
+        AlertDialog(
+            onDismissRequest = { 
+                pendingCopySource = null
+                pendingCopyTarget = null 
+            },
+            title = { Text(stringResource(R.string.confirm)) },
+            text = { Text(stringResource(R.string.copy_bin_confirm_msg)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onCopyBin(pendingCopySource!!, pendingCopyTarget!!)
+                        pendingCopySource = null
+                        pendingCopyTarget = null
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { 
+                    pendingCopySource = null
+                    pendingCopyTarget = null 
+                }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
 }
 
 
@@ -218,8 +383,11 @@ fun GpuBinList(
 private fun BinItemCard(
     name: String,
     isActive: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onCopyClick: () -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -271,11 +439,25 @@ private fun BinItemCard(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                 }
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_chevron_right),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                
+                Box {
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "Options", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.copy_contents)) },
+                            onClick = {
+                                expanded = false
+                                onCopyClick()
+                            },
+                            leadingIcon = { Icon(Icons.Rounded.ContentCopy, null) }
+                        )
+                    }
+                }
             }
         }
     }

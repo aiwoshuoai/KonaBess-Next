@@ -33,7 +33,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
 import javax.inject.Inject
 
@@ -188,7 +187,7 @@ class SharedDtsViewModel @Inject constructor(
 
                 val lines = activeProvider.dtsLines.value
                 if (lines.isNotEmpty()) {
-                    withTimeoutOrNull(3000) {
+                    kotlinx.coroutines.withTimeoutOrNull(3000) {
                         if (activeProvider is GpuRepository) {
                             (activeProvider as GpuRepository).bins.drop(1).first()
                         }
@@ -405,6 +404,11 @@ class SharedDtsViewModel @Inject constructor(
     }
 
     fun reorderFrequency(binIndex: Int, from: Int, to: Int) {}
+
+    fun copyBinContents(sourceBinIndex: Int, targetBinIndex: Int) {
+        val desc = "Copied Bin $sourceBinIndex contents to Bin $targetBinIndex"
+        gpuRepository.copyBinContents(sourceBinIndex, targetBinIndex, desc)
+    }
 
     // --- Logic Helpers ---
 

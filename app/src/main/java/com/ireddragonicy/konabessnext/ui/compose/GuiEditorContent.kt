@@ -178,7 +178,8 @@ fun GuiEditorContent(
                             runtimeGpuFrequencies = runtimeGpuFrequencies,
                             onBinClick = { gpuFrequencyViewModel.selectedBinIndex.value = it },
                             onBack = { gpuFrequencyViewModel.navigationStep.value = 0 },
-                            onReload = { sharedViewModel.loadData() }
+                            onReload = { sharedViewModel.loadData() },
+                            onCopyBin = { source, target -> sharedViewModel.copyBinContents(source, target) }
                         )
                     } else if (selectedLevelIndex == -1) {
                         val uiModels = binUiModels[selectedBinIndex]

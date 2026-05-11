@@ -603,4 +603,10 @@
     <string name="dtbo_display_changes">Zmiany Taktowania Wyświetlacza</string>
     <string name="dtbo_touch_changes">Zmiany Ekranu Dotykowego</string>
     <string name="dtbo_speaker_changes">Zmiany Wzmacniacza Głośnikowego</string>
+
+    <!-- Bin Copy Strings -->
+    <string name="copy_bin_to">Kopiuj Bin do...</string>
+    <string name="copy_bin_confirm_msg">Czy na pewno chcesz nadpisać ten bin zawartością binu źródłowego?</string>
+    <string name="copy_contents">Kopiuj zawartość</string>
+
 </resources>
