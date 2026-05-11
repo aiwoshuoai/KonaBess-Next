@@ -152,11 +152,11 @@
     <string name="settings">设置</string>
     <string name="language">语言</string>
     <string name="gpu_freq_unit">GPU 频率单位</string>
-    <string name="english">English</string>
-    <string name="german">Deutsch</string>
+    <string name="english">英文 (或 英语)</string>
+    <string name="german">德语</string>
     <string name="chinese">中文</string>
-    <string name="indonesian">Bahasa Indonesia</string>
-    <string name="polish">Polski</string>
+    <string name="indonesian">印尼语</string>
+    <string name="polish">波兰语</string>
     <string name="hz">Hz</string>
     <string name="mhz">MHz</string>
     <string name="ghz">GHz</string>
@@ -385,7 +385,7 @@
     <string name="frequency">频率</string>
     <string name="frequency_header">频率</string>
     <string name="bus_range_format">%1$s-%2$s</string>
-    <string name="unknown_short">?</string>
+    <string name="unknown_short">\?</string>
     <string name="raw_value_hint">原始数值 (十进制/十六进制)</string>
     <string name="custom_value">自定义数值</string>
     
@@ -595,8 +595,8 @@
     <string name="multi_bin_help_bullet_kernel_pick">内核在启动时会挑选一组配置（通常与熔断/频率档位数据绑定），因此编辑错误的档位可能不会生效。</string>
     <string name="multi_bin_help_heading_dts_evidence">DTS 实时证据（源自当前频率表）</string>
     <string name="multi_bin_help_heading_runtime_evidence">运行环境实时证据（源自 sysfs）</string>
-    <string name="multi_bin_help_dts_node_open">qcom,gpu-pwrlevel-bins {</string>
-    <string name="multi_bin_help_dts_compatible">compatible = "qcom,gpu-pwrlevels-bins";</string>
+    <string name="multi_bin_help_dts_node_open">qcom,gpu-pwrlevel-bins { (节点开始)</string>
+    <string name="multi_bin_help_dts_compatible">compatible = \"qcom,gpu-pwrlevel-bins\" (兼容性声明)</string>
     <string name="multi_bin_help_dts_no_bins">// 尚未解析到档位</string>
     <string name="multi_bin_help_dts_more_bins_format">... 还有 %1$d 个档位</string>
     <string name="multi_bin_help_label_parsed_nodes">当前已解析的档位节点</string>
@@ -629,7 +629,7 @@
     <string name="voltage_table_pattern_optional">电压表匹配模式 (可选)</string>
     <string name="zip_archive">ZIP 压缩包</string>
     <string name="dtbo_panel_clockrate_title">面板时钟频率</string>
-    <string name="dtbo_panel_clockrate_subtitle">qcom,mdss-dsi-panel-clockrate — 以 Hz 为单位的位时钟 (Byte Clock) 频率。</string>
+    <string name="dtbo_panel_clockrate_subtitle">qcom,mdss-dsi-panel-clockrate — 字节时钟频率 (Hz)</string>
     <string name="dtbo_brightness_title">亮度 / 背光</string>
     <string name="dtbo_brightness_subtitle">覆盖最大亮度等级设置。</string>
     <string name="dtbo_advanced_timing_title">高级时序设置</string>
@@ -774,5 +774,8 @@
     <string name="rpmh_input_hint">接受十进制 (如 952000) 或十六进制 (如 0xe8820)</string>
     <string name="rpmh_min_format">最小值：%1$d (0x%2$s)</string>
     <string name="rpmh_max_format">最大值：%1$d (0x%2$s)</string>
+    <string name="copy_bin_to">复制 Bin 至...</string>
+    <string name="copy_bin_confirm_msg">您确定要使用源 Bin 的内容覆盖此 Bin 吗？这将替换所有的频率和电压参数。</string>
+    <string name="copy_contents">复制内容</string>
 
 </resources>
